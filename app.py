@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, render_template,Flask,url_for,request,redirect,make_response,session, flash
 from pymongo import MongoClient
 import requests,json
-import qrcode
+import qrcode, os
 import datetime
 
 app = Flask(__name__)
@@ -56,6 +56,10 @@ def signin():
             detail = coll.find_one({"Name": name, "password":pas})
             print(detail)
             if(detail != None):
+                try:
+                    os.remove(os.getcwd()+"/qr.png")
+                except:
+                    print(" ")
                 detail = list(detail.values())
                 data = [name, pas]
                 QRCodefile = "qr.png"
