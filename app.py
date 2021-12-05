@@ -56,15 +56,11 @@ def signin():
             detail = coll.find_one({"Name": name, "password":pas})
             print(detail)
             if(detail != None):
-                try:
-                    os.remove(os.getcwd()+"/static/qr.png")
-                except:
-                    print(" ")
                 detail = list(detail.values())
                 data = [name, pas]
-                QRCodefile = os.getcwd()+"\static\qr.png"
+                QRCodefile = "/static/qr.png"
                 QRimage = qrcode.make(data)
-                QRimage.save(QRCodefile)
+                QRimage.save(os.getcwd() + QRCodefile)
                 print("HIII")
                 coll.find_one_and_update({"Name":name}, {"$set": {"QRcode": str(QRimage) }})
                 print("BYEEE")
