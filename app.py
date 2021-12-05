@@ -3,6 +3,9 @@ from pymongo import MongoClient
 import requests,json
 import qrcode, os
 import datetime
+import base64
+from io import BytesIO
+from PIL import Image
 
 app = Flask(__name__)
 app.secret_key = '123321'
@@ -57,14 +60,22 @@ def signin():
             print(detail)
             if(detail != None):
                 try:
-                    os.remove(os.getcwd()+"/qr.png")
+                    os.remove(os.getcwd()+"/static/qr.png")
                 except:
                     print(" ")
                 detail = list(detail.values())
                 data = [name, pas]
                 QRCodefile = "qr.png"
                 QRimage = qrcode.make(data)
-                QRimage.save(QRCodefile)
+                im_file = BytesIO()
+                QRimage.save(im_file, format="JPEG")
+                im_bytes = im_file.getvalue()
+                im_b64 = base64.b64encode(im_bytes)
+                coll.find_one_and_update({"Name":name}, {"$set": {"QRcode": im_b64}})
+                im_bytes = base64.b64decode(im_b64)
+                im_file = BytesIO(im_bytes)
+                img = Image.open(im_file)
+                img.save(os.getcwd()+"/static/qr.png")
                 session['uname']=name
                 session['upas']=pas
                 session['val']=detail[6]
@@ -72,7 +83,7 @@ def signin():
             else:
                 return render_template('signin.html', msg="Invalid login details!!")
         else:
-            coll.insert_one({"Name": name ,"Number": num , "Address": addr ,"password": pas, "Redeem Points":"0", "Donation":"0", "Time": datetime.datetime.now(), "Activity":[] })
+            coll.insert_one({"Name": name ,"Number": num , "Address": addr ,"password": pas, "Redeem Points":"0", "Donation":"0", "Time": datetime.datetime.now(),"QRcode":"null", "Activity":[] })
 
     return render_template('signin.html')
 
