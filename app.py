@@ -62,9 +62,12 @@ def signin():
                     print(" ")
                 detail = list(detail.values())
                 data = [name, pas]
+                QRCodefile = os.getcwd()+"\static\qr.png"
                 QRimage = qrcode.make(data)
-                coll.find_one_and_update({"Name":name}, {"$set": {"QRcode": QRimage }})
-                QRimage.save(os.getcwd()+"/static/qr.png")
+                QRimage.save(QRCodefile)
+                print("HIII")
+                coll.find_one_and_update({"Name":name}, {"$set": {"QRcode": str(QRimage) }})
+                print("BYEEE")
                 session['uname']=name
                 session['upas']=pas
                 session['val']=detail[6]
