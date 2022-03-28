@@ -23,7 +23,7 @@ def algo(valuv):
     bc=0
     colom = 0
     for i in valuv:
-        if(i == '['):
+        if(i == '['):             #['sdfs','zsfzzx']
             bc+=1
         if(bc==1):
             if(i=="'" and colom==1):
@@ -47,11 +47,13 @@ def index():
 
 @app.route('/signin',methods=['GET','POST'])
 def signin():
+    chk = ["Ngo", "Biogas", "Fertilizer"]
     if(request.method == "POST"):
         pas = request.form.get("logpass")
         name = request.form.get("logname")
         num = request.form.get("lognum")
         addr = request.form.get("logaddr")
+        roll = request.form.get("roll")
         if(num == None):
             detail = coll.find_one({"Name": name, "password":pas})
             print(detail)
@@ -71,7 +73,12 @@ def signin():
             else:
                 return render_template('signin.html', msg="Invalid login details!!")
         else:
-            coll.insert_one({"Name": name ,"Number": num , "Address": addr ,"password": pas, "Redeem Points":"0", "Donation":"0","QRcode":"null", "Time": datetime.datetime.now(), "Activity":[] })
+            if(roll in chk):
+                coll.insert_one({"Name": name ,"Number": num , "Address": addr ,"password": pas, "Roll":roll, "Recieve Count":"0", "Total Quantity":"0", "QRcode":"null", "Time": datetime.datetime.now(), "Activity":[] })
+            elif(roll=="Houseold"):
+                coll.insert_one({"Name": name ,"Number": num , "Address": addr ,"password": pas, "Roll":roll, "Redeem Points":"0", "Donation":"0", "Total Quantity":"0", "QRcode":"null", "Time": datetime.datetime.now(), "Activity":[] })
+            else:
+                coll.insert_one({"Name": name ,"Number": num , "Address": addr ,"password": pas, "Roll":roll, "Tax Reduction":"0", "Donation":"0", "Total Quantity":"0", "QRcode":"null", "Time": datetime.datetime.now(), "Activity":[] })
 
     return render_template('signin.html')
 
@@ -111,30 +118,23 @@ def signinorg():
      return render_template('signinorg.html')
 
 
-
-
 @app.route('/receving',methods=['GET','POST'])
 def receving():
      if(request.method == "POST"):
         food = request.form.get("food")
-        c1 = request.form.get("c1")
-        c2 = request.form.get("c2")
-        c3 = request.form.get("c3")
-        c4 = request.form.get("c4")
-        c5 = request.form.get("c5")
         loca=session['location']
         username = session['name']
         compoi = session['compoi']
         donate = session['donote']
-        foods = [food, c1,c2,c3,c4,c5]
-        foods = list(filter(None, foods))
+        totaldontion = session['Total']
         print(food,loca)
-        for i in foods:
-            col.find_one_and_update({"location":loca}, {"$push":{"storage": i }})
-        coll.find_one_and_update({"Name":username}, {"$set": {"Donation": int(donate)+1, "Redeem Points": int(compoi)+len(foods)*10}})
-        coll.find_one_and_update({"Name":username}, {"$push":{"Activity":{"Food":foods, "Time":datetime.datetime.now(), "Location":loca}}})
+        pre = col.find_one({"location":loca})['Quantity']
+        col.find_one_and_update({"location":loca}, {"$set":{"Quantity": float(pre)+float(food) }})
+        coll.find_one_and_update({"Name":username}, {"$set": {"Donation": int(donate)+1, "Total Quantity": float(totaldontion)+float(food), "Tax Reduction": float(compoi)+float(food)*3}})
+        coll.find_one_and_update({"Name":username}, {"$push":{"Activity":{"quantity":food, "Time":datetime.datetime.now(), "Location":loca}}})
         flash("Donation Successfull !!")
         return redirect(url_for('worker'))
+
 
 @app.route('/recieve',methods=['GET','POST'])
 def recieve():
@@ -143,20 +143,20 @@ def recieve():
         loca = session['location']
         store = col.find_one({"location":loca})
         store = list(store.values())
-        tes = store[4]
-        name = session['cliname']
-        dob = session['dob']
-        for i in range(len(tes)):
-            if(tes[i] == food):
-                tes.pop(i)
-                break
-        col.find_one_and_update({"location":loca}, {"$set":{"storage": tes }})
-        clien.find_one_and_update({"FirstName":name}, {"$push":{"Activity": {"Food": food, "Time": datetime.datetime.now(), "location":loca} }})
+        username = session['name']
+        rec = session['reccount']
+        tot = session['totquant']
+
+        col.find_one_and_update({"location":loca}, {"$set":{"Quantity": float(store[5])-float(food) }})
+        coll.find_one_and_update({"Name":username}, {"$set": {"Recieve Count": int(rec)+1, "Total Quantity": float(tot)+float(food)}})
+        coll.find_one_and_update({"Name":username}, {"$push":{"Activity":{"quantity":food, "Time":datetime.datetime.now(), "Location":loca}}})
         flash("Selected Successfully !!")
         return redirect(url_for('worker'))
 
+
 @app.route('/worker',methods=['GET','POST'])
 def worker():
+    chk = ["Ngo", "Biogas", "Fertilizer"]
     loca = session['location']
     store = col.find_one({"location":loca})
     store = list(store.values())
@@ -168,18 +168,21 @@ def worker():
         value = request.form.get("hidden")
         details = algo(value)
         print(details)
-        if(len(details) == 2):
-            detail = coll.find_one({"Name": details[0], "password":details[1]})
-            print(detail)
-            info = list(detail.values())
-            session['name'] = info[1]
-            session['compoi'] = info[5]
-            session['donote'] = info[6]
-            newdet = [info[1], info[5], info[6]]
+        detail = coll.find_one({"Name": details[0], "password":details[1]})
+        print(detail)
+        info = list(detail.values())
+        session['name'] = info[1]
+        session['compoi'] = info[6]
+        session['donote'] = info[7]
+        session['Total'] = info[8]
+        newdet = [info[1], info[5], info[6], info[7], info[8]]
+        if(info[5] in chk):
+            newdet2 = [info[1], info[2], info[3], info[5], info[6], info[7]]
+            session['reccount']=info[6]
+            session['totquant']=info[7]
+            return render_template('worker.html', det = newdet2, deta=[], store=tes, conrole = info[5] )
+        else:
             return render_template('worker.html', deta = newdet, det = [], store=tes)
-        session['cliname']=details[0]
-        session['dob']=details[9]
-        return render_template('worker.html', det = details, deta=[],store=tes )
 
     return render_template('worker.html', det=[], deta=[], store=tes)
 
@@ -200,7 +203,6 @@ def location():
 @app.route('/success',methods=['GET','POST'])
 def success():
     return render_template('success.html')
-
 
 
 @app.route('/register',methods=['GET','POST'])

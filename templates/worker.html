@@ -53,7 +53,7 @@
     <li class="active"><a data-toggle="tab" href="#home" id="anc">Donor</a></li>
     <li><a data-toggle="tab" href="#menu1" id="anc">Receiver</a></li>
     <li><a data-toggle="tab" href="#menu2" id="anc">Scan QR</a></li>
-    <li><a data-toggle="tab" href="#menu3" id="anc">User registeration</a></li>
+  <!--  <li><a data-toggle="tab" href="#menu3" id="anc">User registeration</a></li> -->
   </ul>
 <div class="tab-content">
 <div id="home" class="tab-pane fade in active">
@@ -67,12 +67,20 @@
           <td><p class="card-text" id = "textdeco">{{deta[0]}}</p></td>
         </tr>
         <tr>
-          <td><p class="card-text" id = "textdeco">Redeeam Points</p></td>
+          <td><p class="card-text" id = "textdeco">Role</p></td>
           <td><p class="card-text" id = "textdeco">{{deta[1]}}</p></td>
         </tr>
         <tr>
-          <td><p class="card-text" id = "textdeco">Donation Count</p></td>
+          <td><p class="card-text" id = "textdeco">Tax reduction</p></td>
           <td><p class="card-text" id = "textdeco">{{deta[2]}}</p></td>
+        </tr>
+        <tr>
+          <td><p class="card-text" id = "textdeco">Donation Count</p></td>
+          <td><p class="card-text" id = "textdeco">{{deta[3]}}</p></td>
+        </tr>
+        <tr>
+          <td><p class="card-text" id = "textdeco">Total donation in KG</p></td>
+          <td><p class="card-text" id = "textdeco">{{deta[4]}}</p></td>
         </tr>
 
       </table>
@@ -81,16 +89,11 @@
   <div class="card"  style="background-color:black;color:#F27024;">
     <div class="card-body">
      <form action="{{url_for('receving')}}" method="post">
-      <input type="text"  class="form-control" name="food" placeholder="enter the Food"/><br>
+      <input type="text"  class="form-control" name="food" placeholder="Enter the quantity in Kg"/><br>
         <div id="ext"></div>
-         <center>
-          <input type="button" class="myButtonn" id="add1" value="Add food" onclick="add()"/><br>
-          <input type="button" class="myButtonn" id="rem1" value="Remove food" onclick="remo()"/>
-        </center>
-        <br>
         <br>
         <center>
-          <button type="submit" class="btn btn-lg ms-2">Add to fridge </button>
+          <button type="submit" class="btn btn-lg ms-2"> Submit </button>
         </center>
       </form>
       {% with message = get_flashed_messages() %}
@@ -156,44 +159,28 @@
        <h5 class="card-title" id="textdecohead" style="text-align: center;">Details</h5>
         <table class="table" style="color: #F27024;">
           <tr>
-            <td><p class="card-text" id = "textdeco">First Name</p></td>
+            <td><p class="card-text" id = "textdeco">Name</p></td>
             <td><p class="card-text" id = "textdeco">{{det[0]}}</p></td>
           </tr>
           <tr>
-            <td><p class="card-text" id = "textdeco">Last Name</p></td>
-            <td><p class="card-text" id = "textdeco" class="card-text" id = "textdeco">{{det[1]}}</p></td>
+            <td><p class="card-text" id = "textdeco">Address</p></td>
+            <td><p class="card-text" id = "textdeco" class="card-text" id = "textdeco">{{det[2]}}</p></td>
           </tr>
           <tr>
-            <td><p class="card-text" id = "textdeco" class="card-text" id = "textdeco">Mother Name</p></td>
-            <td><p class="card-text" id = "textdeco" class="card-text" id = "textdeco" class="card-text" id = "textdeco">{{det[2]}}</p></td>
+            <td><p class="card-text" id = "textdeco">Number</p></td>
+            <td><p class="card-text" id = "textdeco">{{det[1]}}</p></td>
           </tr>
           <tr>
-            <td><p class="card-text" id = "textdeco">Father Name</p></td>
+            <td><p class="card-text" id = "textdeco">Role</p></td>
             <td><p class="card-text" id = "textdeco">{{det[3]}}</p></td>
           </tr>
           <tr>
-            <td><p class="card-text" id = "textdeco">Address</p></td>
+            <td><p class="card-text" id = "textdeco">Recieve Count</p></td>
             <td><p class="card-text" id = "textdeco">{{det[4]}}</p></td>
           </tr>
           <tr>
-            <td><p class="card-text" id = "textdeco">Gender</p></td>
-            <td><p  class="card-text" id = "textdeco" class="card-text" id = "textdeco" class="card-text" id = "textdeco" class="card-text" id = "textdeco" class="card-text" id = "textdeco" class="card-text" id = "textdeco">{{det[5]}}</p></td>
-          </tr>
-          <tr>
-            <td><p class="card-text" id = "textdeco">State</p></td>
-            <td><p class="card-text" id = "textdeco" class="card-text" id = "textdeco" class="card-text" id = "textdeco" class="card-text" id = "textdeco" class="card-text" id = "textdeco">{{det[6]}}</p></td>
-          </tr>
-          <tr>
-            <td><p class="card-text" id = "textdeco">City</p></td>
-            <td><p class="card-text" id = "textdeco" class="card-text" id = "textdeco" class="card-text" id = "textdeco" class="card-text" id = "textdeco">{{det[7]}}</p></td>
-          </tr>
-          <tr>
-            <td><p class="card-text" id = "textdeco">Date of birth</p></td>
-            <td><p class="card-text" id = "textdeco" class="card-text" id = "textdeco" class="card-text" id = "textdeco">{{det[8]}}</p></td>
-          </tr>
-          <tr>
-            <td><p class="card-text" id = "textdeco">Pincode</p></td>
-            <td><p class="card-text" id = "textdeco" class="card-text" id = "textdeco">{{det[9]}}</p></td>
+            <td><p class="card-text" id = "textdeco">Total Quantity</p></td>
+            <td><p class="card-text" id = "textdeco">{{det[5]}}</p></td>
           </tr>
         </table>
    </div>
@@ -204,18 +191,13 @@
        <br>
        <form action="{{url_for('recieve')}}" method="post">
         <div class="form-group" id="formfloat">
-           <label for="sel1">Select the food:</label>
-             <select class="form-control" id="sel1" name="food">
-               <option value="null">Choose</option>
-               {% for k in store %}
-               <option value={{k}}>{{k}}</option>
-               {% endfor %}
-             </select>
+           <input type="text"  class="form-control" name="food" placeholder="Enter the quantity in Kg"/><br>
+             <div id="ext"></div>
           </div>
           <br>
           <br>
           <center>
-            <button type="submit" class="btn btn-lg ms-2">Donate </button>
+            <button type="submit" class="btn btn-lg ms-2">Receive</button>
           </center>
         </form>
      </div>

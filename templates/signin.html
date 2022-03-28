@@ -54,7 +54,7 @@
                       <button type="submit" class="btn mt-4" id="aa">submit</button>
                             				<p class="mb-0 mt-4 text-center"><a href="{{url_for('signinemp')}}" class="link">Worker ? </a></p>
 											<p class="mb-0 mt-4 text-center"><a href="{{url_for('signinorg')}}" class="link">organizer?</a></p>
-											
+
 				      					</div>
                       </form>
 			      					</div>
@@ -65,7 +65,7 @@
 											<h4 class="mb-4 pb-3" style="color:#F27024">Sign Up</h4>
                       <form action="{{url_for('signin')}}" method="post">
 											<div class="form-group"style="color:#F27024">
-												<input type="text" name="logname" class="form-style" placeholder="Your Full Name" id="logname" autocomplete="off">
+												<input type="text" name="logname" class="form-style" placeholder="Your Full Name" id="logname" autocomplete="off" required>
 												<i class="input-icon uil uil-user i"></i>
 											</div>
 											<!--<div class="form-group mt-2">
@@ -73,15 +73,25 @@
 												<i class="input-icon uil uil-at i"></i>
 											</div> -->
 											<div class="form-group mt-2"style="color:#F27024">
-												<input type="text" name="lognum" class="form-style" placeholder="Your Number" id="lognum" autocomplete="off">
+												<input type="text" name="lognum" class="form-style" placeholder="Your Number" id="lognum" autocomplete="off" required>
 												<i class="input-icon uil uil-user i"></i>
 											</div>
 											<div class="form-group mt-2"style="color:#F27024">
-												<input type="text" name="logaddr" class="form-style" placeholder="Your Full address" id="logaddr" autocomplete="off">
+												<input type="text" name="logaddr" class="form-style" placeholder="Your Full address" id="logaddr" autocomplete="off" required>
 												<i class="input-icon uil uil-user i"></i>
 											</div>
+                      <select class="form-select form-style form-group mt-2" aria-label="Default select example"style="color:grey;background-color: #1f2029;" name="roll" required>
+                        <option selected>Select the role</option>
+                        <option value="Houseold">Houseold</option>
+                        <option value="Supermarket">Supermarket</option>
+                        <option value="Restaurant/Hotel">Restaurant/Hotel</option>
+                        <option value="Grocery Shop">Vendors</option>
+                        <option value="Ngo">NGO</option>
+                        <option value="Biogas">Biogas</option>
+                        <option value="Fertilizer">Fertilizer</option>
+                      </select>
 											<div class="form-group mt-2">
-												<input type="password" name="logpass" class="form-style" placeholder="Your Password" id="logpass" autocomplete="off">
+												<input type="password" name="logpass" class="form-style" placeholder="Your Password" id="logpass" autocomplete="off" required>
 												<i class="input-icon uil uil-lock-alt i"></i>
 											</div>
 											<button type="submit" class="btn mt-4" id="aa">submit</button>
@@ -98,7 +108,7 @@
 	</div>
 
 
-  <div class="pom">Â©️ S M I M D </div>
+  <div class="pom">©️Codesploit</div>
 <script src="https://code.iconify.design/2/2.1.0/iconify.min.js"></script>
 
 </body>
